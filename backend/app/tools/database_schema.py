@@ -1,22 +1,17 @@
-import os
 from typing import Any
 
 import psycopg
-from dotenv import load_dotenv
 
-load_dotenv()
-
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://cloudops:cloudops_dev_password@127.0.0.1:5432/cloudops",
-)
+from backend.app.tools.secure_sql import DATABASE_URL
 
 
 def get_database_schema() -> dict[str, Any]:
     """
     Return the PostgreSQL schema available to the Data Agent.
+
     Read-only metadata inspection.
     """
+
     query = """
         SELECT
             table_name,
@@ -30,9 +25,7 @@ def get_database_schema() -> dict[str, Any]:
     with psycopg.connect(DATABASE_URL) as conn:
         with conn.cursor() as cursor:
             cursor.execute(query)
-
             rows = cursor.fetchall()
-
             return {
                 "success": True,
                 "tables": [

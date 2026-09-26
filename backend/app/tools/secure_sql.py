@@ -8,6 +8,7 @@ from decimal import Decimal
 from typing import Any
 
 import psycopg
+from psycopg import conninfo
 from dotenv import load_dotenv
 
 from backend.app.tools.audit import audit_sql_event
@@ -17,10 +18,28 @@ load_dotenv()
 
 # Application DB role.
 # This role is intentionally NOT SUPERUSER and NOT BYPASSRLS.
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://cloudops_app:cloudops_app_dev_password@127.0.0.1:5432/cloudops",
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+CLOUD_SQL_SOCKET = os.getenv(
+    "CLOUD_SQL_SOCKET",
+    "/cloudsql/project-1a1fb24e-7573-477f-871:us-central1:cloudops-postgres",
 )
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL and DB_PASSWORD:
+    DATABASE_URL = conninfo.make_conninfo(
+        dbname="cloudops",
+        user="cloudops_app",
+        password=DB_PASSWORD,
+        host=CLOUD_SQL_SOCKET,
+    )
+
+if not DATABASE_URL:
+    DATABASE_URL = (
+        "postgresql://cloudops_app:"
+        "cloudops_app_dev_password"
+        "@127.0.0.1:5432/cloudops"
+    )
 
 MAX_ROWS = 100
 MAX_QUERY_LENGTH = 5000
