@@ -1,0 +1,149 @@
+name: CloudOps AI Security
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  security-evaluation:
+    name: Security Evaluation
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: cloudops
+          POSTGRES_PASSWORD: cloudops_dev_password
+          POSTGRES_DB: cloudops
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cloudops -d cloudops"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://cloudops_app:cloudops_app_dev_password@127.0.0.1:5432/cloudops
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install pytest
+
+      - name: Initialize database
+        env:
+          PGPASSWORD: cloudops_dev_password
+        run: |
+          psql \
+            -h 127.0.0.1 \
+            -U cloudops \
+            -d cloudops \
+            -c "
+            CREATE TABLE customers (
+                customer_id SERIAL PRIMARY KEY,
+                customer_name VARCHAR(100),
+                tenant_id VARCHAR(50) NOT NULL
+            );
+
+            CREATE TABLE products (
+                product_id SERIAL PRIMARY KEY,
+                product_name VARCHAR(100),
+                tenant_id VARCHAR(50) NOT NULL
+            );
+
+            CREATE TABLE orders (
+                order_id SERIAL PRIMARY KEY,
+                customer_id INTEGER,
+                tenant_id VARCHAR(50) NOT NULL
+            );
+
+            INSERT INTO customers
+                (customer_name, tenant_id)
+            VALUES
+                ('Diya Shah', 'tenant-a'),
+                ('Anaya Joshi', 'tenant-a'),
+                ('Rahul Mehta', 'tenant-b'),
+                ('Priya Patel', 'tenant-b');
+
+            INSERT INTO products
+                (product_name, tenant_id)
+            VALUES
+                ('Laptop', 'tenant-a'),
+                ('Monitor', 'tenant-a'),
+                ('Keyboard', 'tenant-b'),
+                ('Mouse', 'tenant-b');
+
+            INSERT INTO orders
+                (customer_id, tenant_id)
+            VALUES
+                (1, 'tenant-a'),
+                (2, 'tenant-a'),
+                (3, 'tenant-b'),
+                (4, 'tenant-b');
+
+            ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
+            ALTER TABLE customers FORCE ROW LEVEL SECURITY;
+
+            ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+            ALTER TABLE products FORCE ROW LEVEL SECURITY;
+
+            ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
+            ALTER TABLE orders FORCE ROW LEVEL SECURITY;
+
+            CREATE ROLE cloudops_app
+                LOGIN
+                PASSWORD 'cloudops_app_dev_password'
+                NOSUPERUSER
+                NOCREATEDB
+                NOCREATEROLE
+                NOREPLICATION
+                NOBYPASSRLS;
+
+            GRANT CONNECT ON DATABASE cloudops TO cloudops_app;
+            GRANT USAGE ON SCHEMA public TO cloudops_app;
+            GRANT SELECT ON customers, products, orders TO cloudops_app;
+
+            CREATE POLICY customers_tenant_isolation
+            ON customers
+            USING (
+                tenant_id =
+                current_setting('app.tenant_id', true)
+            );
+
+            CREATE POLICY products_tenant_isolation
+            ON products
+            USING (
+                tenant_id =
+                current_setting('app.tenant_id', true)
+            );
+
+            CREATE POLICY orders_tenant_isolation
+            ON orders
+            USING (
+                tenant_id =
+                current_setting('app.tenant_id', true)
+            );
+            "
+
+      - name: Run tenant security evaluation
+        run: |
+          PYTHONPATH=. \
+          python -m backend.app.evaluation.tenant_security_evaluator
