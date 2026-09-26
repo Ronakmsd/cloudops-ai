@@ -34,3 +34,6 @@ htmlcov/
 # Local backup files
 *.bak
 *.before_*
+
+# Local database migration dump
+cloudops_migration.sql
