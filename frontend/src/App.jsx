@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./App.css";
 
 const API_BASE =
-  "https://cloudops-ai-944383402967.us-central1.run.app";
+  "https://cloudops-ai-xf6sboo7fa-uc.a.run.app";
 
 const DEMO_USER_ID = "ronak-e2e";
 

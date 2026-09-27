@@ -16,11 +16,11 @@ The platform combines **Google ADK, Gemini, Retrieval-Augmented Generation (RAG)
 
 ### Public Application
 
-https://cloudops-ai-frontend-944383402967.us-central1.run.app
+https://cloudops-ai-frontend-xf6sboo7fa-uc.a.run.app
 
 ### Backend
 
-https://cloudops-ai-944383402967.us-central1.run.app
+https://cloudops-ai-xf6sboo7fa-uc.a.run.app
 
 The deployed demonstration validates the complete browser-to-database path:
 
