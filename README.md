@@ -1,62 +1,159 @@
 # CloudOps AI
 
-### Enterprise Multi-Modal Agentic AI & Cloud Intelligence Platform
+### Enterprise Agentic AI & Cloud Intelligence Platform
 
-CloudOps AI is an enterprise-oriented Agentic AI platform built to demonstrate secure, grounded, and evaluation-driven AI workflows across enterprise knowledge, structured data, documents, multimodal inputs, productivity workflows, and cloud operations.
+**Google ADK · Gemini · Multi-Agent Orchestration · RAG · Multimodal AI · PostgreSQL RLS · Tenant Isolation · Cloud Run**
 
-The platform combines Google ADK, Gemini, RAG, PostgreSQL, FastAPI, tenant isolation, PostgreSQL Row-Level Security (RLS), guarded tools, agent evaluation, and automated security regression testing.
+CloudOps AI is an enterprise-oriented Agentic AI platform designed to demonstrate how AI agents can reason across enterprise data, knowledge, documents, and workflows while remaining constrained by deterministic application, database, and infrastructure security controls.
 
-The project focuses on a core engineering principle:
+The platform combines **Google ADK, Gemini, Retrieval-Augmented Generation (RAG), multimodal AI, PostgreSQL, Cloud SQL, PostgreSQL Row-Level Security (RLS), tenant-bound tools, SQL validation, prompt/input guards, agent evaluation, and automated security regression testing.**
 
-> Model intelligence should be combined with deterministic application, database, and infrastructure controls.
-
----
-
-## Architecture
-
-Web / API
-↓
-Google ADK API — Cloud Run Runtime
-↓
-Root Orchestrator — `cloudops_root_agent`
-↓
-├── Research Agent → RAG / Knowledge Base
-├── Data Agent → Tenant Guarded SQL → PostgreSQL / Cloud SQL → PostgreSQL RLS
-├── Multimodal Agent → Gemini Multimodal Analysis
-└── Workflow Agent → Guarded Read-Only Workflows
-
-Security & Evaluation Layer:
-
-Security Context → Tool Authorization → Tenant Authorization → Prompt / Input Guards → Read-Only SQL Enforcement → Tenant SQL Validation → PostgreSQL RLS → Authorized Tenant Data
+> **Core engineering principle:** Model intelligence should be combined with deterministic application, database, and infrastructure controls.
 
 ---
 
-## Core Capabilities
+## 🚀 Live Demo
 
-- Multi-agent orchestration with Google ADK
-- Gemini-powered reasoning
-- Gemini-powered multimodal analysis
-- Retrieval-Augmented Generation (RAG)
-- Enterprise knowledge retrieval with source provenance
-- Secure structured-data analysis
-- Server-controlled tenant context
-- PostgreSQL Row-Level Security (RLS)
-- Read-only SQL execution with security guardrails
-- Tenant-bound database tools
-- Prompt-injection defenses
-- Role-based tool authorization
-- Workspace-style read-only workflows
-- Agent adversarial evaluation
-- RAG retrieval and grounded-answer evaluation
-- Automated tenant security regression testing
-- Docker-based development
-- GitHub Actions security validation
-- FastAPI backend and OpenAPI documentation
-- Google ADK context caching
+### Public Application
+
+https://cloudops-ai-frontend-944383402967.us-central1.run.app
+
+### Backend
+
+https://cloudops-ai-944383402967.us-central1.run.app
+
+The deployed demonstration validates the complete browser-to-database path:
+
+    React / Vite Frontend
+             │
+             ▼
+    Google Cloud Run
+             │
+             ▼
+       Google ADK API
+             │
+             ▼
+      Root Orchestrator
+             │
+       ┌─────┼─────┐
+       ▼     ▼     ▼
+    Research Data Multimodal
+             │
+             ▼
+      Tenant Guarded SQL
+             │
+             ▼
+      Cloud SQL / PostgreSQL
+             │
+             ▼
+       PostgreSQL RLS
+             │
+             ▼
+      Authorized Tenant Data
+
+A Workflow Agent provides guarded read-only enterprise workflow capabilities.
+
+The public frontend has been validated through an actual browser request against the deployed backend.
 
 ---
 
-# Agent Architecture
+# 🎯 What CloudOps AI Demonstrates
+
+CloudOps AI focuses on a practical enterprise AI engineering problem:
+
+> **How can an AI system reason across enterprise information without allowing the model itself to become the authorization boundary?**
+
+The architecture addresses this through defense in depth:
+
+    Model Intelligence
+           +
+    Agent Orchestration
+           +
+    Application Authorization
+           +
+    Tenant-Bound Tools
+           +
+    SQL Validation
+           +
+    Database Enforcement
+           +
+    Automated Evaluation
+
+Instead of relying exclusively on prompts, security controls are enforced across the application, tool, SQL, and database layers.
+
+---
+
+# ⭐ Engineering Highlights
+
+| Area | Implementation |
+|---|---|
+| Agent framework | Google ADK |
+| Foundation model | Google Gemini |
+| Agent architecture | Root orchestrator + 4 specialist agents |
+| Knowledge | RAG + embeddings + vector retrieval |
+| Structured data | PostgreSQL / Cloud SQL |
+| Tenant isolation | PostgreSQL Row-Level Security |
+| Database access | Tenant-bound read-only SQL |
+| SQL security | Tenant SQL validation + query guardrails |
+| AI security | Prompt/input guards + tool authorization |
+| Multimodal | Gemini-powered visual analysis |
+| Evaluation | Security, tenant, RAG, grounded, workflow, adversarial evaluation |
+| Frontend | React + Vite |
+| Frontend serving | Nginx + Cloud Run |
+| Backend runtime | Google ADK API + Cloud Run |
+| CI | GitHub Actions security regression testing |
+| Secrets | Google Secret Manager |
+| Containerization | Docker |
+
+---
+
+# 🏗️ System Architecture
+
+    ┌─────────────────────────┐
+    │     React / Vite UI     │
+    │        Cloud Run        │
+    └────────────┬────────────┘
+                 │
+                 ▼
+    ┌─────────────────────────┐
+    │     Google ADK API      │
+    │       Cloud Run         │
+    └────────────┬────────────┘
+                 │
+                 ▼
+    ┌─────────────────────────┐
+    │    Root Orchestrator    │
+    │   cloudops_root_agent   │
+    └────────────┬────────────┘
+                 │
+       ┌─────────┼─────────┐
+       │         │         │
+       ▼         ▼         ▼
+    Research    Data    Multimodal
+      Agent     Agent      Agent
+       │         │
+       │         ▼
+       │   Tenant Guarded SQL
+       │         │
+       │         ▼
+       │  Cloud SQL / PostgreSQL
+       │         │
+       │         ▼
+       │ PostgreSQL Row-Level
+       │      Security
+       │         │
+       │         ▼
+       │ Authorized Tenant Data
+       │
+       └───────────────┐
+                       ▼
+                Workflow Agent
+                 Read-Only
+                 Workflows
+
+---
+
+# 🤖 Agent Architecture
 
 CloudOps AI uses a root orchestration agent with specialized agents for different enterprise workloads.
 
@@ -64,7 +161,7 @@ CloudOps AI uses a root orchestration agent with specialized agents for differen
 
 The root agent determines the appropriate specialist based on the actual intent of the request and coordinates the final response.
 
-Structured database requests are routed to the Data Agent rather than being handled by unrelated workflow or research agents.
+Structured database requests are routed to the Data Agent rather than being handled by unrelated research or workflow agents.
 
 ## Research Agent
 
@@ -78,7 +175,7 @@ The Data Agent:
 
 1. Inspects verified database schema information.
 2. Generates read-only SQL.
-3. Uses only the tenant-guarded SQL tool.
+3. Uses the tenant-guarded SQL tool.
 4. Never accepts a user-supplied tenant ID as an authorization source.
 5. Uses the server-authorized tenant context.
 6. Returns only database results actually returned by the database layer.
@@ -86,6 +183,8 @@ The Data Agent:
 ## Multimodal Agent
 
 Handles image and multimodal analysis using Gemini-powered capabilities.
+
+The multimodal subsystem is integrated into the broader agent orchestration architecture rather than implemented as an isolated demo.
 
 ## Workflow Agent
 
@@ -95,45 +194,65 @@ Actions with potential side effects are designed to require explicit confirmatio
 
 ---
 
-# Retrieval-Augmented Generation
+# 🔎 Retrieval-Augmented Generation
 
 The RAG subsystem provides grounded enterprise knowledge retrieval through:
 
 - Document ingestion
 - PDF and text document processing
-- Embedding generation
+- Gemini-powered embeddings
 - Vector retrieval
 - Retrieval evaluation
 - Grounded-answer evaluation
 - Source-aware responses
 
-The system is designed to reduce unsupported answers by grounding responses in retrieved enterprise knowledge.
+The RAG implementation is organized into:
+
+    backend/app/rag/
+    ├── embeddings/
+    ├── ingestion/
+    ├── retrieval/
+    ├── service.py
+    └── tool.py
+
+The goal is to reduce unsupported answers by grounding responses in retrieved enterprise knowledge.
 
 ---
 
-# Security Architecture
+# 🔐 Security Architecture
 
 Security is implemented as a layered defense rather than relying only on model instructions.
 
-User Request
-↓
-Server Security Context (user + tenant + role)
-↓
-Tool Authorization
-↓
-Tenant Authorization
-↓
-Prompt / Input Guard
-↓
-Read-Only SQL Guard
-↓
-Tenant SQL Validation
-↓
-PostgreSQL Row-Level Security
-↓
-Authorized Tenant Data
+    User Request
+         │
+         ▼
+    Server Security Context
+    user + tenant + role
+         │
+         ▼
+    Tool Authorization
+         │
+         ▼
+    Tenant Authorization
+         │
+         ▼
+    Prompt / Input Guard
+         │
+         ▼
+    Read-Only SQL Guard
+         │
+         ▼
+    Tenant SQL Validation
+         │
+         ▼
+    PostgreSQL RLS
+         │
+         ▼
+    Authorized Data
 
-## Tenant Isolation
+---
+
+# 🛡️ Multi-Tenant Isolation
 
 Tenant identity is controlled by the application security context.
 
@@ -141,13 +260,13 @@ The AI agent cannot select, change, or override the authorized tenant.
 
 Tenant-scoped database queries use the server-controlled PostgreSQL setting:
 
-`tenant_id = current_setting('app.tenant_id', true)`
+    tenant_id = current_setting('app.tenant_id', true)
 
 Literal tenant IDs are not used as the authorization mechanism.
 
-Database access uses a dedicated application database role configured without superuser or RLS-bypass privileges.
+The application uses a dedicated database role configured without superuser or RLS-bypass privileges.
 
-PostgreSQL FORCE ROW LEVEL SECURITY policies provide database-level tenant isolation.
+PostgreSQL `FORCE ROW LEVEL SECURITY` policies provide database-level tenant isolation.
 
 This creates defense in depth across:
 
@@ -159,7 +278,7 @@ This creates defense in depth across:
 
 ---
 
-# SQL Security
+# 🔒 SQL Security
 
 Database workflows are intentionally restricted to read-only operations.
 
@@ -178,11 +297,11 @@ The SQL security layer includes controls for:
 - Tenant SQL validation
 - Tool authorization
 
-The application uses a dedicated database role rather than the development/admin database role for agent access.
+The application uses a dedicated database role rather than a development/admin database role for agent access.
 
 ---
 
-# Prompt Injection Defense
+# 🧠 Prompt Injection Defense
 
 CloudOps AI treats external instructions and retrieved content as untrusted data.
 
@@ -197,19 +316,49 @@ Security controls are designed to defend against:
 - Tenant identity override attempts
 - Unauthorized consequential actions
 
+Relevant implementation components include:
+
+    backend/app/security/
+    ├── identity.py
+    ├── prompt_guard.py
+    ├── tenant_authorization.py
+    ├── tenant_sql.py
+    └── tool_authorization.py
+
 Agent security is evaluated using adversarial test cases rather than relying only on static prompts.
 
 ---
 
-# Security Evaluation
+# 🧪 Evaluation & Security Testing
 
-CloudOps AI includes an automated tenant security evaluation suite.
+CloudOps AI treats AI evaluation as an engineering discipline rather than relying exclusively on manual inspection.
 
-## Automated Security Result
+The repository contains evaluation components for:
 
-**10/10 TESTS PASSED**
+- Adversarial agent behavior
+- Security regression
+- Tenant security
+- RAG retrieval
+- Grounded answers
+- Workflow behavior
 
-**SCORE: 1.00**
+Relevant evaluation components include:
+
+    backend/app/evaluation/
+    ├── adversarial_agent_evaluator.py
+    ├── grounded_evaluator.py
+    ├── rag_evaluator.py
+    ├── security_evaluator.py
+    ├── tenant_security_evaluator.py
+    └── workflow_evaluator.py
+
+---
+
+# ✅ Security Evaluation Result
+
+## 10/10 TESTS PASSED
+
+### SCORE: 1.00
 
 | Security Test | Result |
 |---|---|
@@ -226,51 +375,62 @@ CloudOps AI includes an automated tenant security evaluation suite.
 
 The evaluation executes through the application security path and validates tenant isolation, SQL restrictions, and authorization controls.
 
+Run locally with:
+
+    PYTHONPATH=. python -m backend.app.evaluation.tenant_security_evaluator
+
+Expected result:
+
+    10/10 TESTS PASSED
+    SCORE: 1.00
+
 ---
 
-# Live Cloud Deployment Validation
+# 🌐 Live Cloud Deployment Validation
 
 The application has been deployed to Google Cloud Run for live engineering validation.
 
-Cloud Run
-↓
-Google ADK API
-↓
-Root Agent
-↓
-Data Agent
-↓
-Tenant Guarded SQL
-↓
-Cloud SQL PostgreSQL
-↓
-PostgreSQL RLS
-↓
-Authorized Tenant Data
+The validated request path is:
 
-## Live validation performed
+    Public Browser
+          │
+          ▼
+    Cloud Run Frontend
+          │
+          ▼
+    Cloud Run Backend
+          │
+          ▼
+       Google ADK
+          │
+          ▼
+      Root Agent
+          │
+          ▼
+      Data Agent
+          │
+          ▼
+    Tenant Guarded SQL
+          │
+          ▼
+    Cloud SQL / PostgreSQL
+          │
+          ▼
+      PostgreSQL RLS
+          │
+          ▼
+    Authorized Tenant Records
 
-### Authorized tenant request
+## Authorized Tenant Request
 
-A live request successfully executed the complete path:
+A live browser request successfully executed the deployed path and returned the authorized tenant's customer records.
 
-Root Agent
-↓
-Data Agent
-↓
-Database Schema Tool
-↓
-Tenant Guarded SQL Tool
-↓
-PostgreSQL
-↓
-RLS
-↓
-Authorized tenant records
+The validated demonstration returned customer records including:
 
-The live database query used the server-controlled tenant context rather than a literal tenant ID.
+- Diya Shah
+- Anaya Joshi
 
-### Cross-tenant request
+## Cross-Tenant Request
 
 A live request attempting to retrieve another tenant's customer records was rejected by the Data Agent.
 
@@ -280,58 +440,63 @@ These tests validate the deployed agent-routing and tenant-security path in the 
 
 ---
 
-# AI Evaluation
+# 🖥️ Frontend
 
-The platform includes evaluation for:
+The CloudOps AI frontend is implemented with React and Vite and served through Nginx on Cloud Run.
 
-- Prompt-injection resistance
-- Agent authorization bypass attempts
-- System-instruction extraction attempts
-- Consequential-action safety
-- RAG retrieval quality
-- Grounded answer quality
-- Workflow safety
-- Tenant isolation
-- Tool authorization
+The interface provides:
 
-The goal is to make AI behavior measurable and regression-testable rather than relying exclusively on manual inspection.
+- AI Assistant
+- Data Intelligence
+- Research
+- Multimodal
+- Workflows
+- Root Orchestrator status
+- Live Cloud Run status
+- Tenant isolation status
+- Security status
+- Structured customer result cards
+- Markdown-table response rendering
+- Quick-action suggestions
+- Free-form AI requests
+- Loading and error states
 
----
+Example quick actions include:
 
-# Multimodal AI
+    Show my customers
+    Analyze enterprise data
+    Search the knowledge base
+    Analyze a document
 
-The multimodal subsystem supports Gemini-powered visual analysis workflows.
+The UI also communicates an important engineering principle:
 
-The architecture is designed to support:
-
-- Image understanding
-- Multimodal document intelligence
-- Visual reasoning
-- Structured multimodal tool results
-- Secure agent delegation
-
-Multimodal functionality is integrated into the broader agent orchestration architecture rather than implemented as an isolated demo.
-
----
-
-# Enterprise Workflow Architecture
-
-The Workflow Agent uses guarded read-only tools for enterprise productivity-style workflows.
-
-The workflow layer includes:
-
-- Workspace-style search
-- Authorization checks
-- Tenant-aware access
-- Read-only execution
-- Workflow planning
-- Consequential-action confirmation requirements
-
-Actions with potential side effects require explicit confirmation rather than being executed automatically.
+> AI responses should be verified against authorized enterprise data and retrieved sources.
 
 ---
 
-# Context Caching
+# ☁️ Cloud Deployment
+
+## Backend
+
+The backend runs on Google Cloud Run using the Google ADK API runtime.
+
+The deployed service integrates with:
+
+- Google Gemini
+- Cloud SQL / PostgreSQL
+- Secret Manager
+- PostgreSQL RLS
+- Tenant-aware security controls
+
+## Frontend
+
+The frontend is containerized with Docker and served through Nginx on Google Cloud Run.
+
+The frontend communicates with the deployed ADK backend through the public Cloud Run service endpoint.
+
+---
+
+# ⚡ Context Caching
 
 CloudOps AI uses Google ADK context caching to reduce repeated context processing across suitable multi-turn interactions.
 
@@ -339,15 +504,26 @@ The runtime is designed around reusable application and agent execution componen
 
 ---
 
-# Technology Stack
+# 🧰 Technology Stack
 
 ## AI / Agents
 
 - Google Gemini
 - Google ADK
 - Agentic AI
+- Multi-agent orchestration
 - RAG
 - Multimodal AI
+
+## Frontend
+
+- React
+- Vite
+- JavaScript
+- HTML
+- CSS
+- Nginx
+- Docker
 
 ## Backend
 
@@ -360,6 +536,7 @@ The runtime is designed around reusable application and agent execution componen
 ## Data
 
 - PostgreSQL
+- Cloud SQL
 - SQL
 - Vector retrieval
 - Tenant-aware data access
@@ -367,79 +544,117 @@ The runtime is designed around reusable application and agent execution componen
 
 ## Security
 
+- Server-controlled identity context
 - Role-based authorization
 - Tenant isolation
-- Prompt guardrails
+- Prompt/input guards
 - Read-only SQL enforcement
 - Tenant SQL validation
+- Tool authorization
 - Database RLS
 - Adversarial evaluation
 
-## Engineering
+## Cloud / Engineering
 
+- Google Cloud Run
+- Cloud SQL
+- Secret Manager
 - Docker
 - Git
 - GitHub Actions
 - pytest
 - CI security regression testing
-- Google Cloud Run
-- Cloud SQL
-- Secret Manager
 
 ---
 
-# Project Structure
+# 📁 Project Structure
 
-cloudops-ai/
-├── backend/
-│   └── app/
-│       ├── agents/
-│       │   ├── multimodal/
-│       │   └── workflow/
-│       ├── api/
-│       ├── data/
-│       │   └── knowledge/
-│       ├── evaluation/
-│       ├── rag/
-│       │   ├── embeddings/
-│       │   ├── ingestion/
-│       │   └── retrieval/
-│       ├── runtime/
-│       ├── security/
-│       ├── tools/
-│       │   └── workspace/
-│       └── workflows/
-├── .github/
-│   └── workflows/
-│       └── security.yml
-├── .env.example
-├── .gitignore
-├── README.md
-└── backend/requirements.txt
+    cloudops-ai/
+    │
+    ├── backend/
+    │   └── app/
+    │       ├── agents/
+    │       │   ├── multimodal/
+    │       │   ├── workflow/
+    │       │   ├── data_agent.py
+    │       │   ├── research_agent.py
+    │       │   ├── tenant_data_agent.py
+    │       │   └── agent.py
+    │       │
+    │       ├── api/
+    │       ├── core/
+    │       ├── data/
+    │       │   └── knowledge/
+    │       ├── evaluation/
+    │       │   ├── adversarial_agent_evaluator.py
+    │       │   ├── grounded_evaluator.py
+    │       │   ├── rag_evaluator.py
+    │       │   ├── security_evaluator.py
+    │       │   ├── tenant_security_evaluator.py
+    │       │   └── workflow_evaluator.py
+    │       ├── rag/
+    │       │   ├── embeddings/
+    │       │   ├── ingestion/
+    │       │   └── retrieval/
+    │       ├── runtime/
+    │       ├── security/
+    │       │   ├── identity.py
+    │       │   ├── prompt_guard.py
+    │       │   ├── tenant_authorization.py
+    │       │   ├── tenant_sql.py
+    │       │   └── tool_authorization.py
+    │       ├── tools/
+    │       │   ├── workspace/
+    │       │   ├── audit.py
+    │       │   ├── database_schema.py
+    │       │   ├── guarded_sql.py
+    │       │   ├── request_tenant_sql.py
+    │       │   ├── secure_sql.py
+    │       │   └── tenant_data.py
+    │       └── workflows/
+    │
+    ├── frontend/
+    │   ├── src/
+    │   │   ├── App.jsx
+    │   │   ├── App.css
+    │   │   ├── index.css
+    │   │   └── main.jsx
+    │   ├── Dockerfile
+    │   ├── nginx.conf
+    │   ├── package.json
+    │   └── vite.config.js
+    │
+    ├── .github/
+    │   └── workflows/
+    │       └── security.yml
+    │
+    ├── .env.example
+    ├── .gitignore
+    ├── Dockerfile
+    ├── backend/requirements.txt
+    └── README.md
 
 ---
 
-# Local Setup
+# 🛠️ Local Setup
 
 ## 1. Clone the repository
 
-`git clone https://github.com/Ronakmsd/cloudops-ai.git`
-
-`cd cloudops-ai`
+    git clone https://github.com/Ronakmsd/cloudops-ai.git
+    cd cloudops-ai
 
 ## 2. Create a virtual environment
 
-`python3.11 -m venv .venv`
-
-`source .venv/bin/activate`
+    python3.11 -m venv .venv
+    source .venv/bin/activate
 
 ## 3. Install dependencies
 
-`pip install -r backend/requirements.txt`
+    pip install -r backend/requirements.txt
 
 ## 4. Configure environment variables
 
-`cp .env.example .env`
+    cp .env.example .env
 
 Configure the required Google Cloud and Vertex AI values locally.
 
@@ -447,79 +662,90 @@ Never commit `.env`.
 
 ## 5. Run the API
 
-`uvicorn backend.app.main:app --reload`
+    uvicorn backend.app.main:app --reload
 
 API documentation:
 
-`http://127.0.0.1:8000/docs`
+    http://127.0.0.1:8000/docs
 
 ---
 
-# Run Security Evaluation
+# 🧪 Run Security Evaluation
 
-Run the tenant security evaluation with:
+Run:
 
-`PYTHONPATH=. python -m backend.app.evaluation.tenant_security_evaluator`
+    PYTHONPATH=. python -m backend.app.evaluation.tenant_security_evaluator
 
-Expected result:
+Expected:
 
-**10/10 TESTS PASSED**
-**SCORE: 1.00**
+    10/10 TESTS PASSED
+    SCORE: 1.00
 
 ---
 
-# Continuous Integration
+# 🔄 Continuous Integration
 
 The repository includes a GitHub Actions security workflow.
 
 The CI pipeline is designed to:
 
-1. Start an isolated PostgreSQL environment
-2. Initialize tenant-aware database security
-3. Create the restricted application database role
-4. Enable PostgreSQL Row-Level Security
-5. Run the tenant security evaluation
-6. Fail the workflow if security regression tests fail
+1. Start an isolated PostgreSQL environment.
+2. Initialize tenant-aware database security.
+3. Create the restricted application database role.
+4. Enable PostgreSQL Row-Level Security.
+5. Run the tenant security evaluation.
+6. Fail the workflow if security regression tests fail.
 
 This makes security validation part of the software development lifecycle.
 
 ---
 
-# Engineering Principles
+# 🧭 Engineering Principles
 
 CloudOps AI follows several core engineering principles:
 
-1. Security controls should be enforced by application and infrastructure layers, not only by prompts.
-2. Tenant identity is server-controlled and cannot be selected by the model.
-3. Agent database access is read-only.
-4. Retrieved content and external instructions are treated as untrusted data.
-5. AI outputs should be evaluated rather than assumed to be correct.
-6. Security behavior should be continuously regression-tested.
-7. Enterprise AI systems should combine model intelligence with deterministic controls.
-8. Consequential actions should require explicit authorization and confirmation.
-9. System behavior should remain observable through evaluation and audit signals.
+1. **Security controls should be enforced by application and infrastructure layers, not only by prompts.**
+
+2. **Tenant identity is server-controlled and cannot be selected by the model.**
+
+3. **Agent database access is read-only.**
+
+4. **Retrieved content and external instructions are treated as untrusted data.**
+
+5. **AI outputs should be evaluated rather than assumed to be correct.**
+
+6. **Security behavior should be continuously regression-tested.**
+
+7. **Enterprise AI systems should combine model intelligence with deterministic controls.**
+
+8. **Consequential actions should require explicit authorization and confirmation.**
+
+9. **System behavior should remain observable through evaluation and audit signals.**
 
 ---
 
-# Deployment & Security Notes
+# 🔐 Deployment & Production Security Notes
 
 The current Cloud Run deployment is an engineering demonstration environment used to validate the live Agentic AI and tenant-security path.
 
-The current demonstration identity layer uses a server-side identity mapping for controlled end-to-end testing. It is not intended to represent a complete production authentication system.
+The current demonstration identity layer uses a server-side identity mapping for controlled end-to-end testing.
+
+This is **not intended to represent a complete production authentication system**.
 
 A production deployment should derive user identity from a verified authentication boundary such as JWT/OIDC and bind authorization to that trusted identity before invoking tenant-scoped tools.
 
-This distinction keeps the project honest about what has been implemented and what remains as production hardening.
+This distinction intentionally keeps the project accurate about what has been implemented and what remains as production hardening.
 
 ---
 
-# Project Status
+# 📌 Project Status
 
 CloudOps AI is an actively developed engineering project demonstrating:
 
 - Secure enterprise Agentic AI architecture
 - Google ADK orchestration
 - Gemini-powered workflows
+- Multi-agent architecture
 - RAG and grounded retrieval
 - Multimodal AI architecture
 - Tenant-aware structured-data access
@@ -529,17 +755,52 @@ CloudOps AI is an actively developed engineering project demonstrating:
 - Automated security evaluation
 - GitHub Actions security regression testing
 - Live Google Cloud Run validation
+- Public frontend-to-backend E2E validation
 
-The core Agentic AI and multi-tenant data-security path has been validated in the deployed demonstration environment.
+### Current Validation
+
+    ✓ Multi-agent orchestration
+    ✓ Tenant-aware data access
+    ✓ PostgreSQL RLS
+    ✓ Read-only SQL controls
+    ✓ Prompt/input security controls
+    ✓ Automated security evaluation
+    ✓ 10/10 security tests passed
+    ✓ Cross-tenant access rejection
+    ✓ Cloud Run deployment
+    ✓ Public frontend deployment
+    ✓ Browser → backend → database E2E validation
 
 ---
 
-# Author
+# 🔗 Repository
+
+**GitHub**
+
+https://github.com/Ronakmsd/cloudops-ai
+
+---
+
+# 👤 Author
 
 **Ronak Bhanushali**
 
 B.Tech Information Technology
 
-GitHub: https://github.com/Ronakmsd
+**GitHub:**
+https://github.com/Ronakmsd
 
-LinkedIn: https://www.linkedin.com/in/ronak-bhanushali-9a188228b
+**LinkedIn:**
+https://www.linkedin.com/in/ronak-bhanushali-9a188228b
+
+---
+
+## Final Note
+
+CloudOps AI is intentionally designed as an engineering demonstration of secure Agentic AI architecture.
+
+The project emphasizes a principle that is especially important for enterprise AI systems:
+
+> **Do not make the model the security boundary.**
+
+Use model intelligence for reasoning and orchestration, while enforcing authorization, tenant isolation, data access, and security invariants through deterministic application, database, and infrastructure controls.
