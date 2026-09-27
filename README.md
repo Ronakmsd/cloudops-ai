@@ -562,7 +562,6 @@ The runtime is designed around reusable application and agent execution componen
 - Docker
 - Git
 - GitHub Actions
-- pytest
 - CI security regression testing
 
 ---
