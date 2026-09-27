@@ -1,8 +1,10 @@
 import base64
 import json
-import subprocess
 import urllib.error
 import urllib.request
+
+import google.auth
+from google.auth.transport.requests import Request
 from typing import Any
 
 
@@ -12,10 +14,13 @@ MODEL = "gemini-2.5-flash"
 
 
 def _get_access_token() -> str:
-    return subprocess.check_output(
-        ["gcloud", "auth", "print-access-token"],
-        text=True,
-    ).strip()
+    credentials, _ = google.auth.default(
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
+    credentials.refresh(Request())
+    if not credentials.token:
+        raise RuntimeError("Google authentication did not return an access token.")
+    return credentials.token
 
 
 def analyze_image(

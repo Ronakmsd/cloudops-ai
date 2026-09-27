@@ -186,6 +186,18 @@ Handles image and multimodal analysis using Gemini-powered capabilities.
 
 The multimodal subsystem is integrated into the broader agent orchestration architecture rather than implemented as an isolated demo.
 
+The deployed frontend supports direct image upload for visual analysis:
+
+- Supported formats: PNG, JPEG, and WEBP
+- Maximum upload size: 10 MB
+- Backend endpoint: `/multimodal/analyze`
+- Model: Gemini 2.5 Flash
+- Production authentication: Application Default Credentials through the Cloud Run runtime service account
+- Oversized uploads are rejected server-side with HTTP 413
+- Image analysis is executed through Vertex AI and returned to the frontend
+
+The upload limit is enforced independently by the backend rather than relying only on client-side validation.
+
 ## Workflow Agent
 
 Handles authorized read-only productivity and Workspace-style information retrieval workflows.
@@ -459,6 +471,12 @@ The interface provides:
 - Markdown-table response rendering
 - Quick-action suggestions
 - Free-form AI requests
+
+- Direct image upload for Gemini-powered multimodal analysis
+
+- PNG, JPEG, and WEBP image support
+
+- 10 MB server-side upload validation
 - Loading and error states
 
 Example quick actions include:
@@ -734,6 +752,10 @@ This is **not intended to represent a complete production authentication system*
 A production deployment should derive user identity from a verified authentication boundary such as JWT/OIDC and bind authorization to that trusted identity before invoking tenant-scoped tools.
 
 This distinction intentionally keeps the project accurate about what has been implemented and what remains as production hardening.
+
+For Vertex AI access, the Cloud Run backend uses Application Default Credentials (ADC) through its runtime service account. No local `gcloud` CLI dependency is required inside the production container.
+
+The deployed runtime service account is granted the Vertex AI User role required for Gemini inference. Local Docker validation can use mounted ADC credentials, while Cloud Run uses its managed workload identity environment.
 
 ---
 

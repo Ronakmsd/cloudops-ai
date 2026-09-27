@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import "./App.css";
 
 const API_BASE =
-  "https://cloudops-ai-xf6sboo7fa-uc.a.run.app";
+  window.location.hostname === "localhost"
+    ? "http://127.0.0.1:8080"
+    : "https://cloudops-ai-xf6sboo7fa-uc.a.run.app";
 
 const DEMO_USER_ID = "ronak-e2e";
 
@@ -271,6 +273,7 @@ function App() {
   const [input, setInput] = useState("");
   const [activeSection, setActiveSection] = useState("Overview");
   const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef(null);
 
   const sendMessage = async (value = input) => {
     const text = value.trim();
@@ -323,6 +326,106 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault();
     sendMessage();
+  };
+
+  const analyzeImage = async (file) => {
+    if (!file || loading) return;
+
+    const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
+    const maxSize = 10 * 1024 * 1024;
+
+    if (!allowedTypes.includes(file.type)) {
+      setMessages((current) => [
+        ...current,
+        {
+          id: `${Date.now()}-error`,
+          role: "assistant",
+          text: "Please upload a PNG, JPG, JPEG, or WEBP image.",
+        },
+      ]);
+      return;
+    }
+
+    if (file.size > maxSize) {
+      setMessages((current) => [
+        ...current,
+        {
+          id: `${Date.now()}-error`,
+          role: "assistant",
+          text: "The image is too large. Please upload an image smaller than 10 MB.",
+        },
+      ]);
+      return;
+    }
+
+    const question =
+      input.trim() ||
+      "Analyze this image and describe the important information visible in it.";
+
+    setMessages((current) => [
+      ...current,
+      {
+        id: `${Date.now()}-user`,
+        role: "user",
+        text: `📎 ${file.name}\n${question}`,
+      },
+    ]);
+
+    setInput("");
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("question", question);
+
+      const response = await fetch(`${API_BASE}/multimodal/analyze`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.detail ||
+            result.error ||
+            `Image analysis failed (${response.status})`
+        );
+      }
+
+      setMessages((current) => [
+        ...current,
+        {
+          id: `${Date.now()}-assistant`,
+          role: "assistant",
+          text:
+            result.analysis ||
+            "The image was analyzed successfully, but no analysis text was returned.",
+        },
+      ]);
+    } catch (error) {
+      setMessages((current) => [
+        ...current,
+        {
+          id: `${Date.now()}-error`,
+          role: "assistant",
+          text: `I couldn't analyze that image.\n\n${error.message}`,
+        },
+      ]);
+    } finally {
+      setLoading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleFileSelected = (event) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      analyzeImage(file);
+    }
   };
 
   return (
@@ -526,10 +629,19 @@ function App() {
             </div>
 
             <form className="composer" onSubmit={handleSubmit}>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={handleFileSelected}
+                hidden
+              />
               <button
                 type="button"
                 className="composer-tool"
-                aria-label="Attach"
+                aria-label="Attach an image"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={loading}
               >
                 +
               </button>
