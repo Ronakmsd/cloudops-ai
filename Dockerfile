@@ -15,4 +15,4 @@ COPY backend /app/backend
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "python -m google.adk.cli api_server --host 0.0.0.0 --port ${PORT:-8080} --no-reload --no_use_local_storage /app/backend/app/agents"]
+CMD ["sh", "-c", "python -m google.adk.cli api_server --host 0.0.0.0 --port ${PORT:-8080} --no-reload --allow_origins http://localhost:5173 --no_use_local_storage /app/backend/app/agents"]
